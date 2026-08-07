@@ -1,80 +1,350 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Website Under Maintenance</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Khairusthani — Software Developer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-    <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
-            font-family: Arial, sans-serif;
-        }
+  :root{
+    --bg: #0B0F14;
+    --surface: #121922;
+    --surface-2: #1A2330;
+    --line: #223040;
+    --text: #E6EDF3;
+    --muted: #7C8B9C;
+    --accent: #5EEAD4;
+    --accent-dim: #2DD4BF;
+    --warn: #F0B429;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
 
-        body{
-            background:#0f172a;
-            color:white;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            min-height:100vh;
-            text-align:center;
-        }
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  html{ scroll-behavior: smooth; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection{ background: var(--accent-dim); color: #06201C; }
+  a{ color: inherit; }
+  img{ max-width:100%; display:block; }
+  :focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
 
-        .container{
-            max-width:700px;
-            padding:40px;
-        }
+  .wrap{ max-width: 920px; margin: 0 auto; padding: 0 24px; }
 
-        .badge{
-            display:inline-block;
-            padding:10px 20px;
-            background:#f59e0b;
-            color:#000;
-            font-weight:bold;
-            border-radius:999px;
-            margin-bottom:25px;
-        }
+  /* ---------- NAV (file-tabs style) ---------- */
+  header{
+    position: sticky; top:0; z-index: 50;
+    background: rgba(11,15,20,0.85);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner{
+    max-width: 920px; margin: 0 auto; padding: 0 24px;
+    display:flex; align-items:center; justify-content: space-between;
+    height: 56px;
+  }
+  .logo{
+    font-family: var(--font-mono); font-size: 14px; color: var(--accent);
+    letter-spacing: 0.02em;
+  }
+  .tabs{ display:flex; gap: 2px; }
+  .tabs a{
+    font-family: var(--font-mono); font-size: 13px;
+    color: var(--muted); text-decoration:none;
+    padding: 8px 14px; border-bottom: 2px solid transparent;
+    transition: color .15s ease, border-color .15s ease;
+  }
+  .tabs a:hover{ color: var(--text); }
+  .tabs a.active{ color: var(--accent); border-color: var(--accent); }
+  .tabs a::before{ content: attr(data-tag); opacity: .5; margin-right: 5px; }
 
-        h1{
-            font-size:3rem;
-            margin-bottom:20px;
-        }
+  @media (max-width: 620px){
+    .tabs a span.full{ display:none; }
+  }
 
-        p{
-            font-size:1.1rem;
-            color:#cbd5e1;
-            line-height:1.7;
-            margin-bottom:10px;
-        }
+  /* ---------- HERO / TERMINAL ---------- */
+  .hero{ padding: 88px 0 64px; }
+  .terminal{
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px -24px rgba(0,0,0,0.6);
+  }
+  .term-bar{
+    display:flex; align-items:center; gap:8px;
+    padding: 10px 14px;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--line);
+  }
+  .dot{ width:11px; height:11px; border-radius:50%; }
+  .dot.r{ background:#FF5F56; } .dot.y{ background:#FFBD2E; } .dot.g{ background:#27C93F; }
+  .term-title{
+    font-family: var(--font-mono); font-size:12px; color: var(--muted);
+    margin-left: 8px;
+  }
+  .term-body{
+    padding: 26px 24px 30px;
+    font-family: var(--font-mono); font-size: 14px;
+    min-height: 210px;
+  }
+  .term-line{ color: var(--muted); }
+  .term-line .prompt{ color: var(--accent); }
+  .term-output{ margin: 4px 0 18px; }
+  .term-output .key{ color: var(--warn); }
+  .name-line{
+    font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(28px, 5vw, 42px);
+    color: var(--text);
+    margin: 2px 0 6px;
+  }
+  .role-line{
+    color: var(--accent);
+    font-size: clamp(15px,2.2vw,17px);
+  }
+  .cursor{
+    display:inline-block; width: 8px; height: 1.1em;
+    background: var(--accent); vertical-align: text-bottom;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+  @media (prefers-reduced-motion: reduce){
+    .cursor{ animation: none; }
+  }
 
-        footer{
-            margin-top:30px;
-            color:#94a3b8;
-            font-size:0.9rem;
-        }
-    </style>
+  .hero-links{ display:flex; gap:14px; margin-top: 22px; flex-wrap: wrap; }
+  .btn{
+    font-family: var(--font-mono); font-size: 13px;
+    padding: 10px 16px; border-radius: 6px;
+    border: 1px solid var(--line);
+    text-decoration:none; color: var(--text);
+    transition: border-color .15s ease, transform .15s ease, background .15s ease;
+  }
+  .btn:hover{ border-color: var(--accent); transform: translateY(-1px); }
+  .btn.primary{ background: var(--accent); color:#06201C; border-color: var(--accent); font-weight:600; }
+  .btn.primary:hover{ background: var(--accent-dim); }
+
+  /* ---------- SECTION generic ---------- */
+  section{ padding: 64px 0; border-top: 1px solid var(--line); }
+  .eyebrow{
+    font-family: var(--font-mono); font-size: 12px; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    margin-bottom: 10px;
+  }
+  h2{
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(22px, 3vw, 28px);
+    margin-bottom: 28px;
+  }
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{
+    display:grid; grid-template-columns: 1fr; gap: 28px;
+  }
+  .stack{
+    display:flex; flex-wrap:wrap; gap:8px; margin-top: 18px;
+  }
+  .chip{
+    font-family: var(--font-mono); font-size: 12.5px;
+    padding: 6px 11px; border-radius: 5px;
+    background: var(--surface); border: 1px solid var(--line);
+    color: var(--muted);
+  }
+
+  /* ---------- PROJECTS (folder listing) ---------- */
+  .file-list{ border: 1px solid var(--line); border-radius: 10px; overflow:hidden; }
+  .file-row{
+    display:grid; grid-template-columns: 22px 1fr auto;
+    gap: 12px; align-items:start;
+    padding: 20px 18px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+    text-decoration:none; color: var(--text);
+  }
+  .file-row:last-child{ border-bottom:none; }
+  .file-icon{ color: var(--accent); font-family: var(--font-mono); }
+  .file-name{
+    font-family: var(--font-mono); font-weight:600; font-size: 14.5px;
+    color: var(--text); margin-bottom: 5px;
+  }
+  .file-desc{ font-size: 14px; color: var(--muted); }
+  .file-tags{ display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+  .file-tags span{
+    font-family: var(--font-mono); font-size: 11px; color: var(--accent-dim);
+  }
+  .file-arrow{ font-family: var(--font-mono); color: var(--muted); align-self:center; }
+
+  .empty-state{
+    padding: 34px 18px;
+    background: var(--surface);
+    text-align:center;
+  }
+  .empty-state .file-icon{ display:block; font-size: 20px; margin-bottom:10px; }
+  .empty-state p{ color: var(--muted); font-size: 14px; }
+  .empty-state .soon{
+    display:inline-block; margin-top:12px;
+    font-family: var(--font-mono); font-size:11px; color: var(--warn);
+    border: 1px solid var(--line); border-radius: 20px; padding: 5px 12px;
+  }
+
+  /* ---------- EXPERIENCE (git log) ---------- */
+  .log{ position: relative; padding-left: 26px; }
+  .log::before{
+    content:''; position:absolute; left:5px; top:6px; bottom:6px;
+    width:1px; background: var(--line);
+  }
+  .commit{ position: relative; padding-bottom: 30px; }
+  .commit:last-child{ padding-bottom:0; }
+  .commit::before{
+    content:''; position:absolute; left:-26px; top:5px;
+    width:11px; height:11px; border-radius:50%;
+    background: var(--bg); border: 2px solid var(--accent);
+  }
+  .commit-hash{ font-family: var(--font-mono); font-size:12px; color: var(--warn); }
+  .commit-msg{ font-family: var(--font-display); font-weight:600; font-size:16px; margin:4px 0 3px; }
+  .commit-meta{ font-family: var(--font-mono); font-size:12.5px; color: var(--muted); }
+  .commit-body{ margin-top:8px; font-size: 14.5px; color: var(--muted); }
+
+  /* ---------- CONTACT ---------- */
+  .contact-term{
+    background: var(--surface); border:1px solid var(--line); border-radius: 10px;
+    padding: 26px 24px; font-family: var(--font-mono); font-size: 14px;
+  }
+  .contact-list{ margin-top: 16px; display:flex; flex-direction:column; gap:10px; }
+  .contact-list a{ text-decoration:none; color: var(--text); }
+  .contact-list a:hover{ color: var(--accent); }
+  .contact-list .k{ color: var(--muted); }
+
+  footer{
+    padding: 30px 0 50px;
+    text-align:center;
+    font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+  }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="badge">🚧 UNDER MAINTENANCE 🚧</div>
 
-        <h1>We're Working on Something Great</h1>
+<header>
+  <div class="nav-inner">
+    <div class="logo">khairusthani.my</div>
+    <nav class="tabs">
+      <a href="#about" data-tag="01" class="active"><span class="full">about.md</span></a>
+      <a href="#projects" data-tag="02"><span class="full">projects/</span></a>
+      <a href="#experience" data-tag="03"><span class="full">log.git</span></a>
+      <a href="#contact" data-tag="04"><span class="full">contact.sh</span></a>
+    </nav>
+  </div>
+</header>
 
-        <p>
-            Our website is currently undergoing maintenance and improvements.
-        </p>
+<main class="wrap">
 
-        <p>
-            We're working hard to bring you a better experience.
-            Please check back soon.
-        </p>
-
-        <footer>
-            Thank you for your patience.
-        </footer>
+  <section class="hero" id="top">
+    <div class="terminal">
+      <div class="term-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="term-title">zsh — ~/khairusthani</span>
+      </div>
+      <div class="term-body">
+        <div class="term-line"><span class="prompt">➜</span> whoami</div>
+        <div class="name-line">Khairusthani</div>
+        <div class="role-line">Software Developer<span class="cursor"></span></div>
+        <div class="term-output" style="margin-top:18px;">
+          <div class="term-line"><span class="prompt">➜</span> cat stack.json</div>
+          <div style="margin-top:6px; color:var(--muted);">
+            { "focus": <span class="key">"backend &amp; web development"</span>, "based_in": <span class="key">"Malaysia"</span>, "status": <span class="key">"open to work"</span> }
+          </div>
+        </div>
+        <div class="hero-links">
+          <a href="#projects" class="btn primary">View Projects</a>
+          <a href="#contact" class="btn">Get In Touch</a>
+        </div>
+      </div>
     </div>
+  </section>
+
+  <section id="about">
+    <div class="eyebrow">// 01 — about</div>
+    <h2>about.md</h2>
+    <div class="about-grid">
+      <p style="color:var(--muted); max-width: 62ch;">
+        I'm a software developer focused on building web products that are both well-engineered under the hood
+        and pleasant to use. Replace this paragraph with a short summary of your background, what you're
+        currently working on, and what kind of problems you enjoy solving.
+      </p>
+      <div class="stack">
+        <span class="chip">JavaScript</span>
+        <span class="chip">Python</span>
+        <span class="chip">Node.js</span>
+        <span class="chip">React</span>
+        <span class="chip">SQL</span>
+        <span class="chip">Git</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="eyebrow">// 02 — work</div>
+    <h2>projects/</h2>
+    <div class="file-list">
+      <div class="empty-state">
+        <span class="file-icon">▸</span>
+        <p>No projects listed yet — will be added here soon.</p>
+        <span class="soon">coming soon</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="eyebrow">// 03 — experience</div>
+    <h2>log --oneline</h2>
+    <div class="log">
+      <div class="empty-state" style="background:transparent; text-align:left; padding-left:0;">
+        <p>Work history will be listed here soon.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="eyebrow">// 04 — contact</div>
+    <h2>contact.sh</h2>
+    <div class="contact-term">
+      <div><span style="color:var(--accent);">➜</span> ./contact.sh --send</div>
+      <div class="contact-list">
+        <div><span class="k">email</span> · <a href="mailto:hello@khairusthani.my">hello@khairusthani.my</a></div>
+        <div><span class="k">github</span> · <a href="https://github.com/" target="_blank" rel="noopener">github.com/khairusthani</a></div>
+        <div><span class="k">linkedin</span> · <a href="https://linkedin.com/" target="_blank" rel="noopener">linkedin.com/in/khairusthani</a></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  © <span id="year"></span> khairusthani.my — built with HTML, CSS &amp; a bit of JS.
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  const sections = document.querySelectorAll('section[id]');
+  const tabs = document.querySelectorAll('.tabs a');
+  const setActive = () => {
+    let current = sections[0]?.id;
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 90) current = s.id;
+    });
+    tabs.forEach(t => t.classList.toggle('active', t.getAttribute('href') === '#' + current));
+  };
+  document.addEventListener('scroll', setActive);
+  setActive();
+</script>
+
 </body>
 </html>
