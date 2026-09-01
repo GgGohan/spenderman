@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Games — khairusthani.my</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  :root{
+    --bg: #0B0F14;
+    --surface: #121922;
+    --surface-2: #1A2330;
+    --line: #223040;
+    --text: #E6EDF3;
+    --muted: #7C8B9C;
+    --accent: #5EEAD4;
+    --accent-dim: #2DD4BF;
+    --warn: #F0B429;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  a{ color: inherit; }
+  :focus-visible{ outline: 2px solid var(--accent); outline-offset: 3px; }
+
+  header{
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner{
+    max-width: 920px; margin: 0 auto; padding: 0 24px;
+    display:flex; align-items:center; justify-content: space-between;
+    height: 56px;
+  }
+  .logo{
+    font-family: var(--font-mono); font-size: 14px; color: var(--accent);
+  }
+  .back-link{
+    font-family: var(--font-mono); font-size: 13px; color: var(--muted);
+    text-decoration:none; display:flex; align-items:center; gap:6px;
+  }
+  .back-link:hover{ color: var(--text); }
+
+  .wrap{ max-width: 920px; margin: 0 auto; padding: 56px 24px 80px; }
+  .eyebrow{
+    font-family: var(--font-mono); font-size: 12px; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    margin-bottom: 10px; text-align:center;
+  }
+  h1{
+    font-family: var(--font-display); font-weight: 600;
+    font-size: clamp(22px, 3vw, 28px);
+    margin-bottom: 34px; text-align:center;
+  }
+
+  /* ---------- SNAKE GAME ---------- */
+  .game-wrap{ display:flex; justify-content:center; }
+  .phone{
+    width: min(100%, 340px);
+    background: linear-gradient(180deg, #2A3340, #1B222B);
+    border: 1px solid var(--line);
+    border-radius: 26px;
+    padding: 18px 18px 22px;
+    box-shadow: 0 24px 60px -24px rgba(0,0,0,0.6);
+  }
+  .phone-top{
+    display:flex; justify-content:space-between; align-items:center;
+    font-family: var(--font-mono); font-size: 11px; color: var(--muted);
+    padding: 0 4px 10px;
+  }
+  .lcd{
+    background: #9CB380;
+    border-radius: 6px;
+    padding: 10px;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.35);
+  }
+  #snakeCanvas{
+    display:block; width:100%; height:auto;
+    image-rendering: pixelated;
+    background: #9CB380;
+    border-radius: 2px;
+  }
+  .lcd-hud{
+    display:flex; justify-content:space-between;
+    font-family: var(--font-mono); font-size: 12px;
+    color: #2B3A1F; padding: 6px 4px 2px;
+    font-weight: 600;
+  }
+  .dpad{
+    display:grid;
+    grid-template-columns: 44px 44px 44px;
+    grid-template-rows: 44px 44px 44px;
+    gap: 6px;
+    justify-content:center;
+    margin: 18px auto 0;
+  }
+  .dpad button{
+    font-family: var(--font-mono);
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    color: var(--text);
+    border-radius: 8px;
+    font-size: 16px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .dpad button:active{ background: var(--accent); color:#06201C; }
+  .dpad .up{ grid-column:2; grid-row:1; }
+  .dpad .left{ grid-column:1; grid-row:2; }
+  .dpad .center{ grid-column:2; grid-row:2; font-size:11px; color:var(--muted); }
+  .dpad .right{ grid-column:3; grid-row:2; }
+  .dpad .down{ grid-column:2; grid-row:3; }
+
+  .game-hint{
+    text-align:center; margin-top: 14px;
+    font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+  }
+  .game-hint .key{
+    color: var(--accent); border:1px solid var(--line); border-radius:4px;
+    padding: 1px 6px;
+  }
+  .game-note{
+    text-align:center; margin-top: 10px;
+    font-family: var(--font-mono); font-size: 11px; color: var(--accent-dim);
+  }
+  @media (min-width: 640px){
+    .dpad{ display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <div class="logo">khairusthani.my</div>
+    <a href="index.html" class="back-link">&larr; back to portfolio</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="eyebrow">// mini games</div>
+  <h1>play.exe — snake</h1>
+
+  <div class="game-wrap">
+    <div class="phone">
+      <div class="phone-top">
+        <span>khairusthani.my</span>
+        <span id="snakeHighScore">HI 0</span>
+      </div>
+      <div class="lcd">
+        <canvas id="snakeCanvas" width="200" height="200"></canvas>
+        <div class="lcd-hud">
+          <span id="snakeScore">SCORE 0</span>
+          <span id="snakeState">TAP START</span>
+        </div>
+      </div>
+      <div class="dpad">
+        <button class="up" aria-label="Up">▲</button>
+        <button class="left" aria-label="Left">◀</button>
+        <button class="center" id="snakeStart">START</button>
+        <button class="right" aria-label="Right">▶</button>
+        <button class="down" aria-label="Down">▼</button>
+      </div>
+    </div>
+  </div>
+  <p class="game-hint">Desktop: <span class="key">↑ ↓ ← →</span> to move, <span class="key">Space</span> to start/restart. Mobile: use the buttons above.</p>
+  <p class="game-note">Walls wrap around — only crashing into yourself ends the game.</p>
+</main>
+
+<script>
+  (function(){
+    const canvas = document.getElementById('snakeCanvas');
+    const ctx = canvas.getContext('2d');
+    const GRID = 20;
+    const CELL = canvas.width / GRID;
+    const scoreEl = document.getElementById('snakeScore');
+    const stateEl = document.getElementById('snakeState');
+    const highEl = document.getElementById('snakeHighScore');
+    const startBtn = document.getElementById('snakeStart');
+
+    let snake, dir, nextDir, food, score, high, running, loopId;
+
+    high = parseInt(localStorage.getItem('snakeHighScore') || '0', 10);
+    highEl.textContent = 'HI ' + high;
+
+    function reset(){
+      snake = [{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+      dir = {x:1,y:0};
+      nextDir = {x:1,y:0};
+      score = 0;
+      placeFood();
+      scoreEl.textContent = 'SCORE 0';
+      running = false;
+      stateEl.textContent = 'TAP START';
+      draw();
+    }
+
+    function placeFood(){
+      let ok = false;
+      while(!ok){
+        food = { x: Math.floor(Math.random()*GRID), y: Math.floor(Math.random()*GRID) };
+        ok = !snake.some(s => s.x === food.x && s.y === food.y);
+      }
+    }
+
+    function draw(){
+      ctx.fillStyle = '#9CB380';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = '#2B3A1F';
+      snake.forEach(s => ctx.fillRect(s.x*CELL+1, s.y*CELL+1, CELL-2, CELL-2));
+      ctx.fillRect(food.x*CELL+3, food.y*CELL+3, CELL-6, CELL-6);
+    }
+
+    function wrap(v, max){
+      if(v < 0) return max - 1;
+      if(v >= max) return 0;
+      return v;
+    }
+
+    function tick(){
+      dir = nextDir;
+      // walls wrap around instead of killing the snake
+      const head = {
+        x: wrap(snake[0].x + dir.x, GRID),
+        y: wrap(snake[0].y + dir.y, GRID)
+      };
+
+      // only self-collision ends the game
+      if(snake.some(s => s.x === head.x && s.y === head.y)){
+        gameOver();
+        return;
+      }
+
+      snake.unshift(head);
+      if(head.x === food.x && head.y === food.y){
+        score++;
+        scoreEl.textContent = 'SCORE ' + score;
+        placeFood();
+      } else {
+        snake.pop();
+      }
+      draw();
+    }
+
+    function gameOver(){
+      running = false;
+      clearInterval(loopId);
+      if(score > high){
+        high = score;
+        localStorage.setItem('snakeHighScore', String(high));
+        highEl.textContent = 'HI ' + high;
+      }
+      stateEl.textContent = 'GAME OVER';
+    }
+
+    function start(){
+      if(running) return;
+      reset();
+      running = true;
+      stateEl.textContent = 'PLAYING';
+      loopId = setInterval(tick, 130);
+    }
+
+    function setDir(x, y){
+      if(!running) return;
+      if(dir.x === -x && dir.y === -y) return; // no reverse
+      nextDir = {x, y};
+    }
+
+    document.addEventListener('keydown', (e) => {
+      switch(e.key){
+        case 'ArrowUp': e.preventDefault(); setDir(0,-1); break;
+        case 'ArrowDown': e.preventDefault(); setDir(0,1); break;
+        case 'ArrowLeft': e.preventDefault(); setDir(-1,0); break;
+        case 'ArrowRight': e.preventDefault(); setDir(1,0); break;
+        case ' ': e.preventDefault(); if(!running) start(); break;
+      }
+    });
+
+    document.querySelector('.dpad .up').addEventListener('click', () => setDir(0,-1));
+    document.querySelector('.dpad .down').addEventListener('click', () => setDir(0,1));
+    document.querySelector('.dpad .left').addEventListener('click', () => setDir(-1,0));
+    document.querySelector('.dpad .right').addEventListener('click', () => setDir(1,0));
+    startBtn.addEventListener('click', start);
+
+    let touchStartX = 0, touchStartY = 0;
+    canvas.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    }, {passive:true});
+    canvas.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      if(Math.abs(dx) > Math.abs(dy)){
+        setDir(dx > 0 ? 1 : -1, 0);
+      } else {
+        setDir(0, dy > 0 ? 1 : -1);
+      }
+    }, {passive:true});
+
+    reset();
+  })();
+</script>
+
+</body>
+</html>
